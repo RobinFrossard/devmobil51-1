@@ -18,6 +18,10 @@ export default class Circle {
     this.direction = direction;
   }
 
+  setDir(angle) {
+    this.direction = angle;
+  }
+
   move(dt) {
     const dx = this.speed * Math.cos(this.direction) * dt / 1000;
     const dy = this.speed * Math.sin(this.direction) * dt / 1000;
