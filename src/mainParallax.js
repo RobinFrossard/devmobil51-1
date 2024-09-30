@@ -1,4 +1,6 @@
-import CircleVerlet from "./class/CircleVerlet";
+import Circle from "./class/Circle";
+import Keyboard from "./class/Keyboard";
+import Touch from "./class/Touch";
 import { TAU } from "./utils/math";
 import MainLoop from "./utils/MainLoop";
 
@@ -7,9 +9,12 @@ const ctx = document.querySelector('canvas').getContext('2d');
 ctx.canvas.width = ctx.canvas.clientWidth;
 ctx.canvas.height = ctx.canvas.clientHeight;
 
+const keyboard = new Keyboard();
+const touch = new Touch();
+
 const circles = [];
-for (let i = 0; i < 1000; i++) {
-  circles.push(new CircleVerlet({
+for (let i = 0; i < 100; i++) {
+  circles.push(new Circle({
     x: Math.random() * ctx.canvas.width,
     y: Math.random() * ctx.canvas.height,
     radius: Math.random() * 80,
@@ -18,22 +23,29 @@ for (let i = 0; i < 1000; i++) {
     direction: 0,
   }));
 }
-// circles.push(new CircleVerlet({
-//   x: ctx.canvas.width / 2,
-//   y: ctx.canvas.height / 2,
-//   radius: 100,
-//   color: 'tomato',
-//   speed: 100,
-//   direction: 0,
-// }));
 
 
 MainLoop.setUpdate((dt) => {
-    for (const c of circles) {
-      c.applyForceY(0.01);
-      c.move(dt);
-      c.constraintBox(ctx.canvas.width, ctx.canvas.height);
+  let angle = false;
+  if(keyboard.isKeyDown('KeyW')) {
+    angle = 3/4 * TAU;
+  } else if(keyboard.isKeyDown('KeyS')) {
+    angle = 1/4 * TAU;
+  }
+
+  if (angle === false) {
+    angle = touch.getAngle();
+    if (angle !== false) {
+      angle += TAU / 2;
     }
+  }
+
+  if (angle !== false) {
+    for (const c of circles) {
+      c.setDir(angle);
+      c.move(dt);
+    }
+  }
 });
 MainLoop.setDraw(() => {
   ctx.canvas.width = ctx.canvas.clientWidth;
