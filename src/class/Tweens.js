@@ -34,7 +34,6 @@ export default class Tweens {
       const progress = tween.from + (tween.to - tween.from) * tween.easingFct(timeFraction);
       tween.animate(progress);
       if (timeFraction === 1) {
-        console.log('delete');
         this.tweens.delete(tween);
       }
     }

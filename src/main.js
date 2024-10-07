@@ -12,28 +12,26 @@ const circles = [];
 for (let i = 0; i < 1; i++) {
   circles.push(new Circle({
     x: 20,
-    y: 400,
+    y: ctx.canvas.height - 20,
     radius: 20,
     color: `hsl(${Math.random() * 360}, 100%, 50%)`,
   }));
 }
 
 tweens.create({
-  duration: 1000,
+  duration: 2000,
   from: circles[0].y,
   to: 100,
   easing: 'quad',
-  animate: (progress) => {
-    circles[0].y = progress;
-    console.log(progress);
-  }
+  animate: (progress) => circles[0].y = progress,
 });
 
 tweens.create({
   duration: 2000,
-  from: circles[0].radius,
-  to: 100,
-  animate: (progress) => circles[0].radius = progress,
+  from: 0,
+  to: 180,
+  easing: 'quad',
+  animate: (progress) => circles[0].color = `hsl(${progress}, 100%, 50%)`,
 });
 
 MainLoop.setSimulationTimestep(1000 / 120);
