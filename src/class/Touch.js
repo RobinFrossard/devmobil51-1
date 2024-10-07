@@ -32,5 +32,4 @@ export default class Keyboard {
     return this.angle;
   }
 
-
 }

@@ -36,4 +36,14 @@ export default class Circle {
     ctx.fill();
   }
 
+  distanceTo({x, y}) {
+    const dx = this.x - x;
+    const dy = this.y - y;
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  isInCollisionWith(circle) {
+    return this.distanceTo(circle) < this.radius + circle.radius;
+  }
+
 }
