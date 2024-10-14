@@ -1,12 +1,5 @@
-console.log('Hello, world 42!');
+import WSClient from "./class/WSClient";
 
-const wsClient = new WebSocket('ws://localhost:8887');
-
-wsClient.onopen = () => {
-  console.log('Connected to server');
-  wsClient.send('Hello, server!');
-}
-
-wsClient.onmessage = (event) => {
-  console.log('Received message:', event.data);
-}
+const wsClient = new WSClient('ws://localhost:8887');
+await wsClient.connect();
+wsClient.send('hello world');
