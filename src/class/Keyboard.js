@@ -1,21 +1,36 @@
 export default class Keyboard {
 
-  constructor() {
-    this.keys = new Set();
-    window.addEventListener('keydown', (e) => this.onKeyDown(e));
-    window.addEventListener('keyup', (e) => this.onKeyUp(e));
+  constructor({
+    useCode = true,
+    caseSensitive = true,
+    domElement = window,
+  } = {}) {
+    domElement.addEventListener('keydown', evt => this.#onKeyDown(evt));
+    domElement.addEventListener('keyup', evt => this.#onKeyUp(evt));
+    this.keysPressed = new Set();
+    this.caseSensitive = caseSensitive;
+    this.codeOrKey = useCode ? 'code' : 'key';
   }
 
-  onKeyDown(e) {
-    this.keys.add(e.code);
+  #onKeyDown(evt) {
+    let key = evt[this.codeOrKey];
+    if (!this.caseSensitive) key = key.toUpperCase();
+    this.keysPressed.add(key);
   }
 
-  onKeyUp(e) {
-    this.keys.delete(e.code);
+  #onKeyUp(evt) {
+    let key = evt[this.codeOrKey];
+    if (!this.caseSensitive) key = key.toUpperCase();
+    this.keysPressed.delete(key);
   }
 
-  isKeyDown(code) {
-    return this.keys.has(code);
+  isKeyDown(key) {
+    if (!this.caseSensitive) key = key.toUpperCase();
+    return this.keysPressed.has(key);
+  }
+
+  isKeysDown(...keys) {
+    return keys.every(key => this.isKeyDown(key));
   }
 
 }

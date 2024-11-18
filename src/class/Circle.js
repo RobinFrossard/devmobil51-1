@@ -1,49 +1,60 @@
-import { TAU } from '../utils/math.js';
+import { TAU } from "/utils/math.js";
 
 export default class Circle {
 
-  constructor({
-    x = 0,
-    y = 0,
-    radius = 100,
-    color = 'tomato',
-    speed = 100,
-    direction = TAU / 4
-  } = {}) {
+  constructor({x, y, r, speed = 0, dir = 0, color}) {
     this.x = x;
     this.y = y;
-    this.radius = radius;
+    this.r = r;
     this.color = color;
     this.speed = speed;
-    this.direction = direction;
+    this.dir = dir; // radian
   }
 
-  setDir(angle) {
-    this.direction = angle;
+  getRadius() {
+    return this.r;
   }
 
-  move(dt) {
-    const dx = this.speed * Math.cos(this.direction) * dt / 1000;
-    const dy = this.speed * Math.sin(this.direction) * dt / 1000;
-    this.x += dx;
-    this.y += dy;
+  setSpeed(speed){
+    this.speed = speed;
+  }
+
+  setColor(color){
+    this.color = color;
+  }
+
+  setDir(dir){
+    this.dir = dir;
+  }
+
+  compareTo(otherCircle) {
+    // test instanceof ?
+    return this.getRadius() - otherCircle.getRadius();
+  }
+
+  distanceTo({x , y}) {
+    const dx = this.x - x;
+    const dy = this.y - y;
+    return Math.sqrt(dx*dx + dy*dy);
+  }
+
+  isInside({x, y}) {
+    return this.distanceTo({x, y}) < this.r;
   }
 
   draw(ctx) {
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, TAU);
     ctx.fillStyle = this.color;
+    ctx.arc(this.x, this.y, this.r, 0, TAU);
+    ctx.closePath();
     ctx.fill();
   }
 
-  distanceTo({x, y}) {
-    const dx = this.x - x;
-    const dy = this.y - y;
-    return Math.sqrt(dx * dx + dy * dy);
-  }
-
-  isInCollisionWith(circle) {
-    return this.distanceTo(circle) < this.radius + circle.radius;
+  move(deltaT) {
+    const distX = this.speed * deltaT * Math.cos(this.dir);
+    const distY = this.speed * deltaT * Math.sin(this.dir);
+    this.x += distX;
+    this.y += distY;
   }
 
 }
